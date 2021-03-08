@@ -85,8 +85,8 @@ jobs:
           # git clone https://github.com/Leo-Jo/luci-app-koolproxyR
           # git clone https://github.com/project-openwrt/openwrt-naiveproxy.git
           git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git
-          # git clone https://github.com/jerrykuku/lua-maxminddb.git
-          # git clone https://github.com/jerrykuku/luci-app-vssr.git
+          git clone https://github.com/jerrykuku/lua-maxminddb.git
+          git clone https://github.com/jerrykuku/luci-app-vssr.git
           git clone https://github.com/mitsukileung/luci-app-filebrowser.git
           git clone https://github.com/destan19/OpenAppFilter.git
 
@@ -167,8 +167,9 @@ jobs:
           CONFIG_PACKAGE_luci-app-filebrowser=y
           # CONFIG_PACKAGE_luci-app-naiveproxy=y
           CONFIG_PACKAGE_luci-app-jd-dailybonus=y
-          # CONFIG_PACKAGE_luci-app-vssr=y
-          # CONFIG_PACKAGE_luci-app-vssr_INCLUDE_ShadowsocksR_Server=y
+          CONFIG_PACKAGE_luci-app-vssr=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_Xray=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_ShadowsocksR_Server=y
           # CONFIG_PACKAGE_luci-app-ps3netsrv=y
           # CONFIG_PACKAGE_luci-app-https-dns-proxy=y
           CONFIG_PACKAGE_luci-app-gowebdav=y
