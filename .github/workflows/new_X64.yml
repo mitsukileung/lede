@@ -89,7 +89,7 @@ jobs:
           # git clone https://github.com/jerrykuku/lua-maxminddb.git
           # git clone https://github.com/jerrykuku/luci-app-vssr.git
           git clone https://github.com/mitsukileung/luci-app-filebrowser.git
-          git clone https://github.com/destan19/OpenAppFilter.git
+          # git clone https://github.com/destan19/OpenAppFilter.git
 
           df -h
 
@@ -163,7 +163,7 @@ jobs:
           EOF
           # 常用LuCI插件选择:
           cat >> .config <<EOF
-          CONFIG_PACKAGE_luci-app-oaf=y
+          # CONFIG_PACKAGE_luci-app-oaf=y
           CONFIG_PACKAGE_luci-app-softethervpn=y
           CONFIG_PACKAGE_luci-app-filebrowser=y
           # CONFIG_PACKAGE_luci-app-naiveproxy=y
