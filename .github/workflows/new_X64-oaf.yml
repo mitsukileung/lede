@@ -1,5 +1,5 @@
 #
-# This is free software, lisence use MIT.
+# This is free software, lisence use MIT
 # 
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # Copyright (C) 2020 KFERMercer <KFER.Mercer@gmail.com>
@@ -7,7 +7,7 @@
 # <https://github.com/KFERMercer/OpenWrt-CI>
 #
 
-name: new_X64_luci-app-filebrowser
+name: new_X64
 
 on:
   push:
@@ -83,12 +83,12 @@ jobs:
           # git clone https://github.com/project-openwrt/luci-theme-argon-mc
           # git clone https://github.com/project-openwrt/luci-app-unblockneteasemusic.git
           # git clone https://github.com/Leo-Jo/luci-app-koolproxyR
-          # git clone https://github.com/mitsukileung/https-dns-proxy
           # git clone https://github.com/project-openwrt/openwrt-naiveproxy.git
           git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git
           # git clone https://github.com/jerrykuku/lua-maxminddb.git
           # git clone https://github.com/jerrykuku/luci-app-vssr.git
-          git clone -b 18.06 https://github.com/xiaozhuai/luci-app-filebrowser
+          git clone https://github.com/mitsukileung/luci-app-filebrowser.git
+          git clone https://github.com/destan19/OpenAppFilter.git
 
           df -h
 
@@ -162,6 +162,7 @@ jobs:
           EOF
           # 常用LuCI插件选择:
           cat >> .config <<EOF
+          CONFIG_PACKAGE_luci-app-oaf=y
           CONFIG_PACKAGE_luci-app-softethervpn=y
           CONFIG_PACKAGE_luci-app-filebrowser=y
           # CONFIG_PACKAGE_luci-app-naiveproxy=y
