@@ -431,10 +431,7 @@ define KernelPackage/usb-dwc2
   TITLE:=DWC2 USB controller driver
   DEPENDS:=+USB_GADGET_SUPPORT:kmod-usb-gadget +kmod-usb-roles
   KCONFIG:= \
-	CONFIG_USB_PCI=y \
 	CONFIG_USB_DWC2 \
-	CONFIG_USB_DWC2_PCI \
-	CONFIG_USB_DWC2_PLATFORM \
 	CONFIG_USB_DWC2_DEBUG=n \
 	CONFIG_USB_DWC2_VERBOSE=n \
 	CONFIG_USB_DWC2_TRACK_MISSED_SOFS=n \
@@ -451,6 +448,26 @@ define KernelPackage/usb-dwc2/description
 endef
 
 $(eval $(call KernelPackage,usb-dwc2))
+
+
+define KernelPackage/usb-dwc2-pci
+  TITLE:=DWC2 USB controller driver (PCI)
+  DEPENDS:=@PCI_SUPPORT +kmod-usb-dwc2 +kmod-usb-phy-nop
+  KCONFIG:= \
+	CONFIG_USB_PCI=y \
+	CONFIG_USB_DWC2_PCI
+  FILES:= \
+	$(LINUX_DIR)/drivers/usb/dwc2/dwc2_pci.ko
+  AUTOLOAD:=$(call AutoLoad,54,dwc2_pci,1)
+  $(call AddDepends/usb)
+endef
+
+define KernelPackage/usb-dwc2-pci/description
+  The Designware USB2.0 PCI interface module for controllers
+  connected to a PCI bus.
+endef
+
+$(eval $(call KernelPackage,usb-dwc2-pci))
 
 
 define KernelPackage/usb-dwc3
@@ -528,7 +545,6 @@ $(eval $(call KernelPackage,usb-wdm))
 define KernelPackage/usb-audio
   TITLE:=Support for USB audio devices
   KCONFIG:= \
-	CONFIG_USB_AUDIO \
 	CONFIG_SND_USB=y \
 	CONFIG_SND_USB_AUDIO
   $(call AddDepends/usb)
@@ -1138,7 +1154,7 @@ $(eval $(call KernelPackage,usb-net-aqc111))
 
 define KernelPackage/usb-net-asix
   TITLE:=Kernel module for USB-to-Ethernet Asix convertors
-  DEPENDS:=+(LINUX_5_4||LINUX_5_10):kmod-libphy +LINUX_6_1:kmod-phylink \
+  DEPENDS:=+kmod-phy-ax88796b +LINUX_6_1:kmod-phylink \
 	+(LINUX_5_15||LINUX_6_1):kmod-mdio-devres \
 	+(LINUX_5_15||LINUX_6_1):kmod-net-selftests
   KCONFIG:=CONFIG_USB_NET_AX8817X
@@ -1152,6 +1168,7 @@ define KernelPackage/usb-net-asix/description
 endef
 
 $(eval $(call KernelPackage,usb-net-asix))
+
 
 define KernelPackage/usb-net-asix-ax88179
   TITLE:=Kernel module for USB-to-Gigabit-Ethernet Asix convertors
@@ -1542,8 +1559,8 @@ $(eval $(call KernelPackage,usb-hid))
 define KernelPackage/usb-hid-cp2112
   SUBMENU:=$(USB_MENU)
   TITLE:=Silicon Labs CP2112 HID USB to SMBus Master Bridge
-  KCONFIG:=CONFIG_GPIOLIB=y CONFIG_HID_CP2112
-  DEPENDS:=+kmod-usb-hid +kmod-i2c-core
+  KCONFIG:=CONFIG_HID_CP2112
+  DEPENDS:=@GPIO_SUPPORT +kmod-usb-hid +kmod-i2c-core
   FILES:=$(LINUX_DIR)/drivers/hid/hid-cp2112.ko
   AUTOLOAD:=$(call AutoProbe,hid-cp2112)
 endef
@@ -1554,6 +1571,23 @@ define KernelPackage/usb-hid-cp2112/description
 endef
 
 $(eval $(call KernelPackage,usb-hid-cp2112))
+
+
+define KernelPackage/usb-hid-mcp2221
+  SUBMENU:=$(USB_MENU)
+  TITLE:=Microchip USB 2.0 to I2C/UART Protocol Converter with GPIO
+  KCONFIG:=CONFIG_HID_MCP2221
+  DEPENDS:=@GPIO_SUPPORT +kmod-usb-hid +kmod-i2c-core
+  FILES:=$(LINUX_DIR)/drivers/hid/hid-mcp2221.ko
+  AUTOLOAD:=$(call AutoProbe,hid-mcp2221)
+endef
+
+define KernelPackage/usb-hid-mcp2221/description
+ HID device driver which registers as an i2c adapter and gpiochip to expose
+ these functions of the MCP2221.
+endef
+
+$(eval $(call KernelPackage,usb-hid-mcp2221))
 
 
 define KernelPackage/usb-yealink
@@ -1714,7 +1748,8 @@ define KernelPackage/usb3
 	+TARGET_bcm53xx:kmod-phy-bcm-ns-usb3 \
 	+TARGET_ramips_mt7621:kmod-usb-xhci-mtk \
 	+TARGET_mediatek:kmod-usb-xhci-mtk \
-	+(TARGET_apm821xx_nand&&LINUX_5_10):kmod-usb-xhci-pci-renesas
+	+TARGET_apm821xx_nand:kmod-usb-xhci-pci-renesas \
+	+TARGET_mvebu_cortexa9:kmod-usb-xhci-pci-renesas
   KCONFIG:= \
 	CONFIG_USB_PCI=y \
 	CONFIG_USB_XHCI_PCI \
@@ -1804,7 +1839,6 @@ $(eval $(call KernelPackage,usb-xhci-mtk))
 
 define KernelPackage/usb-xhci-pci-renesas
   TITLE:=Support for additional Renesas xHCI controller with firmware
-  DEPENDS:=@LINUX_5_10
   KCONFIG:=CONFIG_USB_XHCI_PCI_RENESAS
   HIDDEN:=1
   FILES:=$(LINUX_DIR)/drivers/usb/host/xhci-pci-renesas.ko

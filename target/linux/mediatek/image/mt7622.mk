@@ -1,11 +1,5 @@
 DTS_DIR := $(DTS_DIR)/mediatek
 
-ifdef CONFIG_LINUX_5_4
-  KERNEL_LOADADDR := 0x44080000
-else
-  KERNEL_LOADADDR := 0x44000000
-endif
-
 define Image/Prepare
 	# For UBI we want only one extra block
 	rm -f $(KDIR)/ubi_mark
@@ -94,9 +88,10 @@ define Device/bananapi_bpi-r64
 				   pad-to 40960k | bl31-uboot bananapi_bpi-r64-emmc |\
 				   pad-to 43008k | bl2 snand-2ddr |\
 				   pad-to 43520k | bl31-uboot bananapi_bpi-r64-snand |\
-				$(if $(CONFIG_TARGET_ROOTFS_SQUASHFS),\
-				   pad-to 46080k | append-image squashfs-sysupgrade.itb | check-size | gzip \
-				)
+				$(if $(CONFIG_TARGET_ROOTFS_SQUASHFS), \
+				   pad-to 46080k | append-image squashfs-sysupgrade.itb | check-size |\
+				) \
+				  gzip
   IMAGE_SIZE := $$(shell expr 45 + $$(CONFIG_TARGET_ROOTFS_PARTSIZE))m
   KERNEL			:= kernel-bin | gzip
   KERNEL_INITRAMFS		:= kernel-bin | lzma | fit lzma $$(DTS_DIR)/$$(DEVICE_DTS).dtb with-initrd | pad-to 128k

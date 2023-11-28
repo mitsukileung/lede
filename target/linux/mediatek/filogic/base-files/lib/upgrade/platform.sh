@@ -4,6 +4,11 @@ platform_do_upgrade() {
 	local board=$(board_name)
 
 	case "$board" in
+	asus,tuf-ax4200)
+		CI_UBIPART="UBI_DEV"
+		CI_KERNPART="linux"
+		nand_do_upgrade "$1"
+		;;
 	bananapi,bpi-r3)
 		local rootdev="$(cmdline_get_var root)"
 		rootdev="${rootdev##*/}"
@@ -23,6 +28,12 @@ platform_do_upgrade() {
 			nand_do_upgrade "$1"
 			;;
 		esac
+		;;
+	glinet,gl-mt2500|\
+	glinet,gl-mt6000)
+		CI_KERNPART="kernel"
+		CI_ROOTPART="rootfs"
+		emmc_do_upgrade "$1"
 		;;
 	*)
 		nand_do_upgrade "$1"
@@ -63,6 +74,10 @@ platform_copy_config() {
 			emmc_copy_config
 			;;
 		esac
+		;;
+	glinet,gl-mt2500|\
+	glinet,gl-mt6000)
+		emmc_copy_config
 		;;
 	esac
 }
